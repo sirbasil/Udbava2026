@@ -9,46 +9,54 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg fixed-top antigravity-nav">
-  <div class="container">
-    <a class="navbar-brand retcom-logo" href="{{ url_for('index') }}">RetCom</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0 nav-inter">
-        <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('index') }}">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('marketplace') }}">Marketplace</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('manager') }}">Manager</a>
-        </li>
-      </ul>
-      <div class="d-flex align-items-center">
-          <div class="notification-bell">
-            🔔
-          </div>
-      </div>
+{% if not hide_navbar %}
+<nav class="navbar navbar-expand-lg">
+  <div class="container d-flex justify-content-between align-items-center">
+    <!-- Logo -->
+    <a class="navbar-brand brand-logo m-0" href="{{ url_for('index') }}">RetCom</a>
+    
+    <!-- Center Links -->
+    <div class="d-none d-lg-flex">
+        <a class="nav-link {% if request.endpoint == 'marketplace' %}active{% endif %}" href="{{ url_for('marketplace') }}">Exchange</a>
+        <a class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}" href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a class="nav-link" href="#">Community</a>
+        <a class="nav-link" href="{{ url_for('manager') }}">Archives</a>
+    </div>
+
+    <!-- Right Icons -->
+    <div class="nav-icons d-flex align-items-center">
+        <i class="fa-solid fa-ticket-simple"></i>
+        <i class="fa-solid fa-bell"></i>
+        <img src="https://i.pravatar.cc/150?u=a04258114e29026702d" style="width: 25px; border-radius: 50%; margin-left:15px; border:1px solid #4f8ef7;" alt="User">
     </div>
   </div>
 </nav>
+{% endif %}
 
-<div class="content-wrapper">
-    {% block content %}
-    {% endblock %}
+<div class="main-wrapper">
+    {% block content %}{% endblock %}
 </div>
+
+{% if not hide_footer %}
+<footer>
+    <div class="foot-links">
+        <a href="#">Provenance</a>
+        <a href="#">Terms</a>
+        <a href="#">Privacy</a>
+        <a href="#">Support</a>
+    </div>
+    <div class="foot-title">RetCom Digital Archive</div>
+    <div class="foot-copy">© 1924-2024 RETCOM DIGITAL ARCHIVE. ALL RIGHTS RESERVED.</div>
+</footer>
+{% endif %}
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{{ url_for('static', filename='js/main.js') }}"></script>

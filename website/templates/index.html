@@ -1,61 +1,63 @@
 {% extends "base.html" %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="hero-section">
-    <!-- Rainbow arc -->
-    <div class="rainbow-arc">
-        <div class="band red"></div>
-        <div class="band orange"></div>
-        <div class="band yellow"></div>
-        <div class="band green"></div>
-        <div class="band teal"></div>
-        <div class="band blue"></div>
-    </div>
+<div class="hero-bg">
+    <div class="arc-top"></div>
+    <div class="arc-bottom"></div>
+</div>
 
-    <!-- Landscape silhouette -->
-    <div class="landscape-silhouette">
-        <div class="hill hill-back"></div>
-        <div class="hill hill-front"></div>
-    </div>
-
-    <div class="hero-content container text-center">
+<section class="hero">
+    <div class="container position-relative z-1">
         <h1 class="hero-title">RetCom</h1>
         <p class="hero-subtitle">Retail Community — SR University</p>
 
-        <div class="search-container mt-5">
-            <input type="text" id="inventory-search" class="glow-search" placeholder="Search books, gear, supplies...">
-            <div id="search-results" class="search-results-dropdown"></div>
+        <!-- Search Box -->
+        <div class="search-wrapper">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" id="inventory-search" class="search-box" placeholder="Search books, gear, supplies...">
         </div>
 
-        <div class="badge-container mt-4">
-            <span class="badge gold-outline">Used Books</span>
-            <span class="badge gold-outline">Lab Gear</span>
-            <span class="badge gold-outline">Merchandise</span>
+        <div class="search-pills mt-3 d-flex justify-content-center">
+            <span class="badge"><i class="fa-solid fa-book text-red me-2"></i>USED BOOKS</span>
+            <span class="badge"><i class="fa-solid fa-microscope text-blue me-2"></i>LAB GEAR</span>
+            <span class="badge"><i class="fa-solid fa-shirt text-gold me-2"></i>MERCHANDISE</span>
         </div>
+        
+        <!-- Search Results Dropdown -->
+        <div id="search-results" class="position-absolute w-100 text-start" style="display:none; z-index:100; max-width:600px; left:0; right:0; margin:auto; background:var(--bg-card); border:1px solid var(--accent-gold);"></div>
     </div>
 </section>
 
-<div class="rainbow-rule"></div>
-
 <!-- Featured Items -->
-<section class="featured-section container py-5 mt-4">
-    <h2 class="section-heading mb-4">Featured Items</h2>
-    <div class="row">
+<section class="container mb-5 pb-5">
+    <h2 class="section-title">Featured Items</h2>
+    <div class="row gx-4">
         {% for item in products %}
         <div class="col-md-4 mb-4">
-            <div class="retcom-card card h-100 p-3">
-                <h3 class="card-title">{{ item.name }}</h3>
-                <div class="card-meta d-flex justify-content-between mb-3 mt-2">
-                    <span class="price-text">${{ "%.2f"|format(item.price) }}</span>
+            <div class="product-card card h-100">
+                <!-- Fallback to realistic images based on name -->
+                <div class="position-relative">
                     {% if item.stock_count > 0 %}
-                    <span class="badge bg-success">In Stock ({{ item.stock_count }})</span>
+                    <span class="status-badge bg-gold">IN STOCK</span>
                     {% else %}
-                    <span class="badge bg-danger">Out of Stock</span>
+                    <span class="status-badge bg-red">OUT OF STOCK</span>
+                    {% endif %}
+                    
+                    {% if 'Physics' in item.name or 'Calculus' in item.name %}
+                    <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=600&auto=format&fit=crop" alt="Book">
+                    {% elif 'Hoodie' in item.name %}
+                    <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=600&auto=format&fit=crop" alt="Apparel">
+                    {% else %}
+                    <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=600&auto=format&fit=crop" alt="Gear">
                     {% endif %}
                 </div>
-                <div class="mt-auto">
-                    <button class="btn btn-gold w-100">View Details</button>
+                
+                <div class="product-info d-flex justify-content-between align-items-end">
+                    <div>
+                        <h4 class="font-heading mb-2 text-white">{{ item.name }}</h4>
+                        <div class="price">${{ "%.2f"|format(item.price) }}</div>
+                    </div>
+                    <i class="fa-solid fa-bag-shopping bag-icon"></i>
                 </div>
             </div>
         </div>
@@ -63,19 +65,20 @@
     </div>
 </section>
 
-<!-- Back in Stock -->
-<section class="container mb-5">
-    <div class="restock-panel p-4">
-        <h2 class="subheading-dm">Never Miss a Restock</h2>
-        <form id="subscribe-form" class="row g-3 mt-2 align-items-center">
-            <div class="col-md-8">
-                <input type="text" class="form-control gold-input" placeholder="Enter Student ID (e.g. STU001)">
-            </div>
-            <div class="col-md-4">
-                <button type="submit" class="btn btn-gold w-100">Subscribe via App</button>
-            </div>
-        </form>
+<!-- Email Box -->
+<section class="container pb-5 mb-5">
+    <div class="email-box d-flex justify-content-between align-items-center">
+        <div class="pe-4" style="max-width: 50%;">
+            <h3>Never Miss a Restock</h3>
+            <p>The archives are vast but limited. Leave your credentials and we shall summon you when your desired artifacts reappear.</p>
+        </div>
+        <div style="width: 40%">
+            <form id="subscribe-form">
+                <input type="text" class="w-100 gold-input mb-2" placeholder="Email or Student ID">
+                <button type="submit" class="btn-gold w-100">Subscribe</button>
+            </form>
+        </div>
+        <i class="fa-solid fa-envelope"></i>
     </div>
 </section>
-
 {% endblock %}

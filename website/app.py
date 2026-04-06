@@ -5,8 +5,10 @@ import json
 from datetime import datetime
 from bson import json_util
 
+import os
+
 app = Flask(__name__)
-app.secret_key = 'super_secret_key'
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'dev_fallback_secret_key_only')
 
 db = get_db()
 init_db()
@@ -16,7 +18,7 @@ def parse_json(data):
 
 @app.route('/')
 def index():
-    products = list(db.products.find({}).limit(5))
+    products = list(db.products.find({}))[:5]
     return render_template('index.html', products=products)
 
 @app.route('/marketplace')
