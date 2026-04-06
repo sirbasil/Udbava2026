@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container pb-5">
+    
+    <div class="row mt-5">
+        <!-- Sidebar -->
+        <div class="col-md-3 pe-4">
+            <h6 class="filter-title">Classifications</h6>
+            
+            <div class="d-flex flex-wrap gap-2 mb-5">
+                <div class="filter-pill active" style="flex: 1 1 45%; text-align:center; background:var(--accent-gold); color:#000;">ALL ARTEFACTS</div>
+                <div class="filter-pill" style="flex: 1 1 45%; text-align:center;">ELECTRONICS</div>
+                <div class="filter-pill" style="flex: 1 1 45%; text-align:center;">APPAREL</div>
+                <div class="filter-pill" style="flex: 1 1 45%; text-align:center;">MEDIA</div>
+                <div class="filter-pill" style="flex: 1 1 45%; text-align:center;">FURNITURE</div>
+            </div>
+
+            <div class="curator-note mt-2 mb-5" style="border: 2px solid var(--accent-gold); background:rgba(232, 160, 32, 0.03);">
+                <h5>Curator's Note</h5>
+                <p class="m-0 text-secondary" style="font-size:0.8rem; line-height:1.6;">Every piece in the Exchange has been verified for historical authenticity. Ensure your listing follows the Archivist's Protocol.</p>
+            </div>
+
+            <h6 class="filter-title">Price Range</h6>
+            <div class="position-relative mt-3 mb-2" style="height:4px; background:var(--border-subtle);">
+                <div class="position-absolute h-100" style="width:70%; left:10%; background:var(--accent-gold);"></div>
+                <div class="position-absolute" style="width:12px; height:12px; background:var(--accent-gold); top:-4px; left:10%;"></div>
+                <div class="position-absolute" style="width:12px; height:12px; background:var(--accent-gold); top:-4px; left:80%;"></div>
+            </div>
+            <div class="d-flex justify-content-between text-secondary" style="font-size:0.6rem; font-family:monospace;">
+                <span>0.00 RC</span>
+                <span>5,000.00 RC</span>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="col-md-9 border-start border-secondary border-opacity-25 ps-5 pb-5">
+            <h1 class="hero-title" style="font-size: 5rem; text-shadow:none; color:var(--text-primary); letter-spacing:0;">The Exchange</h1>
+            <div class="text-secondary mb-5 pb-3" style="font-size:0.8rem; letter-spacing:3px; text-transform:uppercase;">AUTHENTIC PEER-TO-PEER ARTEFACT TRADING</div>
+
+            <div class="exchange-grid">
+                <!-- Hardcoded to exactly match the screenshot cards -->
+                <div class="exchange-card p-3">
+                    <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=400&auto=format&fit=crop" class="mb-3" alt="Camera">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="badge bg-gold" style="font-size:0.6rem;">GOOD</span>
+                        <span class="price" style="font-family:monospace; color:var(--text-primary); font-size:0.9rem;">1,240.00 RC</span>
+                    </div>
+                    <h4 class="font-heading mb-2">Olympus OM-1n Vintage</h4>
+                    <p class="text-secondary" style="font-size:0.75rem; line-height:1.5;">Original 1970s SLR body with Zuiko 50mm lens. Tested and fully functional mechanical shutter.</p>
+                    
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div class="d-flex align-items-center">
+                            <div style="width:20px;height:20px;background:#333;margin-right:10px;"></div>
+                            <span class="text-secondary" style="font-size:0.65rem; text-transform:uppercase;">@CURATOR_SMITH</span>
+                        </div>
+                        <button class="btn-outline-gold" style="padding: 5px 12px; font-size: 0.65rem;">CLAIM ITEM</button>
+                    </div>
+                </div>
+
+                <div class="exchange-card p-3">
+                    <img src="https://images.unsplash.com/photo-1523170335258-f5ed11844a49?q=80&w=400&auto=format&fit=crop" class="mb-3" alt="Watch">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="badge bg-blue" style="font-size:0.6rem;">LIKE NEW</span>
+                        <span class="price" style="font-family:monospace; color:var(--text-primary); font-size:0.9rem;">4,800.00 RC</span>
+                    </div>
+                    <h4 class="font-heading mb-2">Braun Bauhaus Edition</h4>
+                    <p class="text-secondary" style="font-size:0.75rem; line-height:1.5;">Limited run minimalist chronometer. Original box and archive papers included.</p>
+                    
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div class="d-flex align-items-center">
+                            <div style="width:20px;height:20px;background:#333;margin-right:10px;"></div>
+                            <span class="text-secondary" style="font-size:0.65rem; text-transform:uppercase;">@TEMPORAL_VAULT</span>
+                        </div>
+                        <button class="btn-outline-gold" style="padding: 5px 12px; font-size: 0.65rem;">CLAIM ITEM</button>
+                    </div>
+                </div>
+
+                <div class="exchange-card p-3">
+                    <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=400&auto=format&fit=crop" class="mb-3" alt="Books">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="badge bg-grey" style="font-size:0.6rem;">FAIR</span>
+                        <span class="price" style="font-family:monospace; color:var(--text-primary); font-size:0.9rem;">650.00 RC</span>
+                    </div>
+                    <h4 class="font-heading mb-2">Archival Leather Journal</h4>
+                    <p class="text-secondary" style="font-size:0.75rem; line-height:1.5;">Hand-stitched calfskin, blank acid-free pages. Shows significant but beautiful patina.</p>
+                    
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div class="d-flex align-items-center">
+                            <div style="width:20px;height:20px;background:#333;margin-right:10px;"></div>
+                            <span class="text-secondary" style="font-size:0.65rem; text-transform:uppercase;">@SCRIBE_OMEGA</span>
+                        </div>
+                        <button class="btn-outline-gold" style="padding: 5px 12px; font-size: 0.65rem;">CLAIM ITEM</button>
+                    </div>
+                </div>
+
+                <div class="exchange-card p-3">
+                    <img src="https://images.unsplash.com/photo-1545084936-af7bf2d34825?q=80&w=400&auto=format&fit=crop" class="mb-3" alt="Typewriter">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="badge bg-gold" style="font-size:0.6rem;">GOOD</span>
+                        <span class="price" style="font-family:monospace; color:var(--text-primary); font-size:0.9rem;">2,900.00 RC</span>
+                    </div>
+                    <h4 class="font-heading mb-2">Remington No. 5</h4>
+                    <p class="text-secondary" style="font-size:0.75rem; line-height:1.5;">Classic portable typewriter. All keys clear, ribbon recently replaced. Pristine case included.</p>
+                    
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div class="d-flex align-items-center">
+                            <div style="width:20px;height:20px;background:#333;margin-right:10px;"></div>
+                            <span class="text-secondary" style="font-size:0.65rem; text-transform:uppercase;">@THE_TYPIST</span>
+                        </div>
+                        <button class="btn-outline-gold" style="padding: 5px 12px; font-size: 0.65rem;">CLAIM ITEM</button>
+                    </div>
+                </div>
+
+                <div class="exchange-card p-3">
+                    <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=400&auto=format&fit=crop" class="mb-3" alt="Headphones">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="badge bg-blue" style="font-size:0.6rem;">LIKE NEW</span>
+                        <span class="price" style="font-family:monospace; color:var(--text-primary); font-size:0.9rem;">1,150.00 RC</span>
+                    </div>
+                    <h4 class="font-heading mb-2">Aurum Sonic MK II</h4>
+                    <p class="text-secondary" style="font-size:0.75rem; line-height:1.5;">Audiophile grade open-back headphones with mahogany finish. Exceptional clarity.</p>
+                    
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div class="d-flex align-items-center">
+                            <div style="width:20px;height:20px;background:#333;margin-right:10px;"></div>
+                            <span class="text-secondary" style="font-size:0.65rem; text-transform:uppercase;">@AUDIO_ARCHIVE</span>
+                        </div>
+                        <button class="btn-outline-gold" style="padding: 5px 12px; font-size: 0.65rem;">CLAIM ITEM</button>
+                    </div>
+                </div>
+
+                <!-- Submit Artefact -->
+                <div class="exchange-card p-3 d-flex flex-column justify-content-center align-items-center" style="border: 1px dashed var(--border-subtle); background:transparent; cursor:pointer; min-height:480px;">
+                    <div style="width:40px; height:40px; border-radius:50%; background:var(--border-subtle); display:flex; justify-content:center; align-items:center; margin-bottom:20px;">
+                        <i class="fa-solid fa-plus text-secondary"></i>
+                    </div>
+                    <h5 class="font-heading text-secondary m-0">Submit Artefact</h5>
+                    <div class="text-secondary mt-2" style="font-size:0.6rem; letter-spacing:2px; text-transform:uppercase;">JOIN THE EXCHANGE</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

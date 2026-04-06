@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% set hide_footer = True %}
+
+{% block content %}
+<div class="sidebar-layout">
+    <!-- Sidebar -->
+    <div class="sidebar d-flex flex-column">
+        <div class="sidebar-profile d-flex align-items-center">
+            <img src="https://i.pravatar.cc/150?img=11" alt="Avatar" class="me-3">
+            <div>
+                <h5 class="text-gold m-0 font-heading" style="font-size: 1.1rem; font-style:italic;">{{ student.name if student else "Julian Vane" }}</h5>
+                <div style="font-size: 0.6rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:1px;">Operational Oversight</div>
+            </div>
+        </div>
+        
+        <div class="loyalty-card">
+            <div class="text-start" style="font-size: 0.6rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:2px; margin-bottom:5px;">Loyalty Tier</div>
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="m-0">Gold Archivist</h5>
+                <span>{{ student.loyalty_points if student else "1,240" }} XP</span>
+            </div>
+        </div>
+
+        <ul class="sidebar-nav flex-grow-1">
+            <li onclick="window.location.href='{{ url_for('manager') }}'"><i class="fa-solid fa-border-all"></i> Command Centre</li>
+            <li><i class="fa-solid fa-box-archive"></i> Inventory</li>
+            <li><i class="fa-solid fa-chart-line"></i> Analytics</li>
+            <li><i class="fa-solid fa-truck"></i> Logistics</li>
+            <li><i class="fa-solid fa-gear"></i> Settings</li>
+        </ul>
+
+        <div class="px-4 mt-auto">
+            <button class="btn-gold w-100">New Listing</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h2 class="section-title text-white mb-5">Student Dashboard</h2>
+
+        <div class="row">
+            <!-- Table Side -->
+            <div class="col-lg-8">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="font-heading" style="font-style:italic; font-size:1.5rem; font-weight:normal;">Recent Acquisitions</h3>
+                    <button class="btn-outline-gold" style="font-size: 0.7rem; padding: 5px 10px;">VIEW ARCHIVE</button>
+                </div>
+                
+                <table class="table arch-table table-borderless">
+                    <thead>
+                        <tr>
+                            <th>Transaction ID</th>
+                            <th>Artifact Name</th>
+                            <th>Status</th>
+                            <th>Provenance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td class="tx-id">#RC-{{ order._id | string | truncate(8, True, '') }}</td>
+                            <td>
+                                {% for item in order['items'] %}
+                                    {{ item.name }}<br>
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% if 'Ready' in order.status %}
+                                <span class="badge bg-gold">IN TRANSIT</span>
+                                {% else %}
+                                <span class="badge bg-blue" style="font-size:0.6rem;">AUTHENTICATED</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-secondary" style="font-style:italic; font-family:var(--font-heading);">Parisian Exchange</td>
+                        </tr>
+                        {% else %}
+                        <!-- Fallback Hardcoded UI for visual matching if no orders -->
+                        <tr>
+                            <td class="tx-id">#RC-1924-01</td>
+                            <td>Cartier Fountain<br>Pen (1930s)</td>
+                            <td><span class="badge bg-gold" style="font-size:0.6rem;">IN TRANSIT</span></td>
+                            <td class="text-secondary" style="font-style:italic; font-family:var(--font-heading);">Parisian Exchange</td>
+                        </tr>
+                        <tr>
+                            <td class="tx-id">#RC-1924-02</td>
+                            <td>Silver Engraved<br>Compasses</td>
+                            <td><span class="badge" style="background:#556b8a; font-size:0.6rem;">AUTHENTICATED</span></td>
+                            <td class="text-secondary" style="font-style:italic; font-family:var(--font-heading);">London Archives</td>
+                        </tr>
+                        <tr>
+                            <td class="tx-id">#RC-1924-03</td>
+                            <td>Leather Field<br>Journal (Blank)</td>
+                            <td><span class="badge bg-grey" style="font-size:0.6rem;">DELIVERED</span></td>
+                            <td class="text-secondary" style="font-style:italic; font-family:var(--font-heading);">Merchant Row</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Side Widgets -->
+            <div class="col-lg-4">
+                <!-- My Listings -->
+                <div class="mb-5">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="font-heading m-0" style="font-style:italic; font-size:1.5rem; font-weight:normal;">My Listings</h3>
+                        <span class="font-heading text-gold" style="font-size:2rem;">04</span>
+                    </div>
+
+                    {% for listing in my_listings[:2] %}
+                    <div class="d-flex align-items-center mb-3" style="border-left: 2px solid var(--accent-gold); padding-left: 10px;">
+                        <div style="width: 50px; height: 50px; background:#222; margin-right:15px;"></div>
+                        <div>
+                            <div style="font-size: 0.95rem;">{{ listing.item_name }}</div>
+                            <div class="text-gold" style="font-size: 0.65rem; font-weight:bold; letter-spacing:1px; text-transform:uppercase;">ACTIVE BID: {{ listing.price }} RC</div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <!-- Hardcoded if empty -->
+                    <div class="d-flex align-items-center mb-3" style="border-left: 2px solid var(--accent-gold); padding-left: 10px;">
+                        <div style="width: 50px; height: 50px; background:#1e180d; margin-right:15px;"></div>
+                        <div>
+                            <div style="font-size: 0.95rem;">Vintage Magnifier</div>
+                            <div class="text-gold" style="font-size: 0.65rem; font-weight:bold; letter-spacing:1px; text-transform:uppercase;">ACTIVE BID: 450 RC</div>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center mb-3" style="border-left: 2px solid var(--border-subtle); padding-left: 10px;">
+                        <div style="width: 50px; height: 50px; background:#111; margin-right:15px;"></div>
+                        <div>
+                            <div style="font-size: 0.95rem;">Underwood Keycap</div>
+                            <div class="text-secondary" style="font-size: 0.65rem; font-weight:bold; letter-spacing:1px; text-transform:uppercase;">DRAFTING STATE</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Logs -->
+                <div>
+                    <h3 class="font-heading mb-4" style="font-style:italic; font-size:1.5rem; font-weight:normal; display:flex; justify-content:space-between;">
+                        Transmission Logs <i class="fa-solid fa-gears" style="color:#222;"></i>
+                    </h3>
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span style="font-size:0.8rem; letter-spacing:1px;">ORDER DISPATCHES</span>
+                        <input type="checkbox" checked style="accent-color: var(--accent-gold);">
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span style="font-size:0.8rem; letter-spacing:1px;">MARKET VOLATILITY</span>
+                        <input type="checkbox" checked style="accent-color: var(--accent-gold);">
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span style="font-size:0.8rem; letter-spacing:1px;">ARTIFACT ALERTS</span>
+                        <input type="checkbox" style="background:transparent; border:1px solid var(--border-subtle);">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "footer_simple.html" ignore missing %}
+{% endblock %}

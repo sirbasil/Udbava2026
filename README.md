@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Welcome to your OnSpace project
 
 ## How can I edit this code?
@@ -59,3 +60,10 @@ This project is built with:
 ## How can I deploy this project?
 
 Simply open [OnSpace]() and click on Share -> Publish.
+=======
+# Udbava2026 - SC-18: The Retail Relay
+Smart Campus Commerce & Resale Ecosystem
+Team: [your team name]
+Domain: Smart Campus
+Stack: Python Flask + MongoDB + HTML
+>>>>>>> f3996b38bebe731e0c94de77e355839718e7a946
