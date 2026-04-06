@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5 mt-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <div class="dark-sidebar retcom-card p-4 text-center h-100">
+                <div class="avatar-circle mb-3 mx-auto">
+                    {{ student.name[0] if student else "S" }}
+                </div>
+                <h3 class="subheading-dm mb-1">{{ student.name if student else "Student" }}</h3>
+                <p class="text-secondary small">{{ student.student_id if student else "STU000" }}</p>
+                
+                <div class="loyalty-stamp mt-4 p-3">
+                    <span class="stamp-label d-block subheading-dm">Loyalty</span>
+                    <span class="stamp-points playfair-bold">{{ student.loyalty_points if student else "0" }}</span>
+                    <span class="stamp-label d-block text-secondary small">Pts</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <h2 class="subheading-dm mb-4">Your Orders</h2>
+            <div class="table-responsive mb-5">
+                <table class="table retcom-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Items</th>
+                            <th>Status</th>
+                            <th>Pickup Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td>#{{ order._id | string | truncate(8, True, '') }}</td>
+                            <td>
+                                {% for item in order.items %}
+                                {{ item.name }} (x{{ item.qty }}){% if not loop.last %}, {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td><span class="badge bg-primary rounded-pill">{{ order.status }}</span></td>
+                            <td>{{ order.pickup_time }}</td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="4" class="text-center text-secondary">No orders found.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <h2 class="subheading-dm mb-4">Your Listings</h2>
+            <div class="table-responsive">
+                <table class="table retcom-table">
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Price</th>
+                            <th>Condition</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for listing in my_listings %}
+                        <tr>
+                            <td>{{ listing.item_name }}</td>
+                            <td>${{ "%.2f"|format(listing.price) }}</td>
+                            <td>{{ listing.condition }}</td>
+                            <td>
+                                {% if listing.sold %}
+                                <span class="badge bg-secondary">Sold</span>
+                                {% else %}
+                                <span class="badge bg-success">Active</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="4" class="text-center text-secondary">No active listings.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

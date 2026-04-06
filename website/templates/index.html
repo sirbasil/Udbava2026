@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <!-- Rainbow arc -->
+    <div class="rainbow-arc">
+        <div class="band red"></div>
+        <div class="band orange"></div>
+        <div class="band yellow"></div>
+        <div class="band green"></div>
+        <div class="band teal"></div>
+        <div class="band blue"></div>
+    </div>
+
+    <!-- Landscape silhouette -->
+    <div class="landscape-silhouette">
+        <div class="hill hill-back"></div>
+        <div class="hill hill-front"></div>
+    </div>
+
+    <div class="hero-content container text-center">
+        <h1 class="hero-title">RetCom</h1>
+        <p class="hero-subtitle">Retail Community — SR University</p>
+
+        <div class="search-container mt-5">
+            <input type="text" id="inventory-search" class="glow-search" placeholder="Search books, gear, supplies...">
+            <div id="search-results" class="search-results-dropdown"></div>
+        </div>
+
+        <div class="badge-container mt-4">
+            <span class="badge gold-outline">Used Books</span>
+            <span class="badge gold-outline">Lab Gear</span>
+            <span class="badge gold-outline">Merchandise</span>
+        </div>
+    </div>
+</section>
+
+<div class="rainbow-rule"></div>
+
+<!-- Featured Items -->
+<section class="featured-section container py-5 mt-4">
+    <h2 class="section-heading mb-4">Featured Items</h2>
+    <div class="row">
+        {% for item in products %}
+        <div class="col-md-4 mb-4">
+            <div class="retcom-card card h-100 p-3">
+                <h3 class="card-title">{{ item.name }}</h3>
+                <div class="card-meta d-flex justify-content-between mb-3 mt-2">
+                    <span class="price-text">${{ "%.2f"|format(item.price) }}</span>
+                    {% if item.stock_count > 0 %}
+                    <span class="badge bg-success">In Stock ({{ item.stock_count }})</span>
+                    {% else %}
+                    <span class="badge bg-danger">Out of Stock</span>
+                    {% endif %}
+                </div>
+                <div class="mt-auto">
+                    <button class="btn btn-gold w-100">View Details</button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Back in Stock -->
+<section class="container mb-5">
+    <div class="restock-panel p-4">
+        <h2 class="subheading-dm">Never Miss a Restock</h2>
+        <form id="subscribe-form" class="row g-3 mt-2 align-items-center">
+            <div class="col-md-8">
+                <input type="text" class="form-control gold-input" placeholder="Enter Student ID (e.g. STU001)">
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-gold w-100">Subscribe via App</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+{% endblock %}
