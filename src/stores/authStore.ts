@@ -1,72 +1,132 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { User, Role } from '@/types';
-import { SEED_USERS } from '@/constants/mockData';
+import type { User } from '@/types';
 import { STUDENT_EMAIL_DOMAIN, STAFF_EMAIL_DOMAIN } from '@/constants/config';
 import { getLoyaltyTier } from '@/lib/utils';
+import { authService } from '@/services/authService';
 
 interface AuthState {
   user: User | null;
-  users: User[];
   isAuthenticated: boolean;
-  login: (email: string, password: string) => { success: boolean; error?: string };
-  register: (name: string, email: string, password: string) => { success: boolean; error?: string };
-  logout: () => void;
-  addLoyaltyPoints: (points: number) => void;
+  isLoading: boolean;
+  error: string | null;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  register: (name: string, email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  logout: () => Promise<{ success: boolean; error?: string }>;
+  loadCurrentUser: () => Promise<void>;
+  addLoyaltyPoints: (points: number) => Promise<void>;
+  clearError: () => void;
 }
 
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
       user: null,
-      users: SEED_USERS,
       isAuthenticated: false,
+      isLoading: false,
+      error: null,
 
-      login: (email: string, password: string) => {
-        const encoded = btoa(password);
-        const found = get().users.find(u => u.email === email && u.password === encoded);
-        if (!found) return { success: false, error: 'Invalid email or password' };
-        set({ user: found, isAuthenticated: true });
-        return { success: true };
+      login: async (email: string, password: string) => {
+        set({ isLoading: true, error: null });
+        try {
+          const result = await authService.login(email, password);
+          if (result.success) {
+            const user = await authService.getCurrentUser();
+            if (user) {
+              set({ user, isAuthenticated: true });
+            }
+            return { success: true };
+          } else {
+            set({ error: result.error });
+            return { success: false, error: result.error };
+          }
+        } catch (err) {
+          const error = err instanceof Error ? err.message : 'Login failed';
+          set({ error });
+          return { success: false, error };
+        } finally {
+          set({ isLoading: false });
+        }
       },
 
-      register: (name: string, email: string, password: string) => {
-        const isStudent = email.endsWith(STUDENT_EMAIL_DOMAIN);
-        const isStaff = email.endsWith(STAFF_EMAIL_DOMAIN);
-        if (!isStudent && !isStaff) {
-          return { success: false, error: `Only ${STUDENT_EMAIL_DOMAIN} or ${STAFF_EMAIL_DOMAIN} emails are allowed` };
+      register: async (name: string, email: string, password: string) => {
+        set({ isLoading: true, error: null });
+        try {
+          const isStudent = email.endsWith(STUDENT_EMAIL_DOMAIN);
+          const isStaff = email.endsWith(STAFF_EMAIL_DOMAIN);
+          if (!isStudent && !isStaff) {
+            const error = `Only ${STUDENT_EMAIL_DOMAIN} or ${STAFF_EMAIL_DOMAIN} emails are allowed`;
+            set({ error });
+            return { success: false, error };
+          }
+
+          const result = await authService.register(name, email, password);
+          if (result.success) {
+            const user = await authService.getCurrentUser();
+            if (user) {
+              set({ user, isAuthenticated: true });
+            }
+            return { success: true };
+          } else {
+            set({ error: result.error });
+            return { success: false, error: result.error };
+          }
+        } catch (err) {
+          const error = err instanceof Error ? err.message : 'Registration failed';
+          set({ error });
+          return { success: false, error };
+        } finally {
+          set({ isLoading: false });
         }
-        if (get().users.find(u => u.email === email)) {
-          return { success: false, error: 'Email already registered' };
-        }
-        const role: Role = isStudent ? 'student' : 'manager';
-        const newUser: User = {
-          id: `u${Date.now()}`,
-          name,
-          email,
-          password: btoa(password),
-          role,
-          avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=D4A843&color=0B0B0F&size=80`,
-          loyaltyPoints: 0,
-          loyaltyTier: role === 'student' ? 'Bronze Archivist' : 'Manager',
-          joinedAt: new Date().toISOString().split('T')[0],
-        };
-        set(s => ({ users: [...s.users, newUser], user: newUser, isAuthenticated: true }));
-        return { success: true };
       },
 
-      logout: () => set({ user: null, isAuthenticated: false }),
+      logout: async () => {
+        set({ isLoading: true });
+        try {
+          const result = await authService.logout();
+          if (result.success) {
+            set({ user: null, isAuthenticated: false });
+          }
+          return result;
+        } catch (err) {
+          const error = err instanceof Error ? err.message : 'Logout failed';
+          return { success: false, error };
+        } finally {
+          set({ isLoading: false });
+        }
+      },
 
-      addLoyaltyPoints: (points: number) => {
+      loadCurrentUser: async () => {
+        try {
+          const user = await authService.getCurrentUser();
+          if (user) {
+            set({ user, isAuthenticated: true });
+          }
+        } catch (err) {
+          console.error('Failed to load current user:', err);
+        }
+      },
+
+      addLoyaltyPoints: async (points: number) => {
         const { user } = get();
         if (!user) return;
-        const newPoints = user.loyaltyPoints + points;
-        const updated = { ...user, loyaltyPoints: newPoints, loyaltyTier: getLoyaltyTier(newPoints) };
-        set(s => ({
-          user: updated,
-          users: s.users.map(u => u.id === updated.id ? updated : u),
-        }));
+
+        try {
+          await authService.addLoyaltyPoints(user.id, points);
+          const newPoints = user.loyaltyPoints + points;
+          const updated: User = {
+            ...user,
+            loyaltyPoints: newPoints,
+            loyaltyTier: getLoyaltyTier(newPoints),
+          };
+          set({ user: updated });
+        } catch (err) {
+          const error = err instanceof Error ? err.message : 'Failed to add points';
+          set({ error });
+        }
       },
+
+      clearError: () => set({ error: null }),
     }),
     { name: 'retcom-auth' }
   )

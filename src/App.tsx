@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
+import { useAuthStore } from '@/stores/authStore';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { ToastContainer } from '@/components/features/ToastContainer';
@@ -33,6 +34,12 @@ function LoadingFallback() {
 }
 
 export default function App() {
+  const { loadCurrentUser } = useAuthStore();
+
+  useEffect(() => {
+    loadCurrentUser();
+  }, [loadCurrentUser]);
+
   return (
     <div className="min-h-screen bg-[#0B0B0F] text-[#F0E8D8]">
       <Suspense fallback={<LoadingFallback />}>

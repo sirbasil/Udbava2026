@@ -35,14 +35,14 @@ export default function Login() {
     return Object.keys(e).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
     setLoading(true);
 
-    setTimeout(() => {
+    try {
       if (tab === 'login') {
-        const result = login(form.email, form.password);
+        const result = await login(form.email, form.password);
         if (result.success) {
           addToast('Welcome back to the archives', 'success');
           navigate('/');
@@ -51,7 +51,7 @@ export default function Login() {
           addToast(result.error || 'Login failed', 'error');
         }
       } else {
-        const result = register(form.name, form.email, form.password);
+        const result = await register(form.name, form.email, form.password);
         if (result.success) {
           addToast('Account created! Welcome to RetCom.', 'success');
           navigate('/');
@@ -60,22 +60,24 @@ export default function Login() {
           addToast(result.error || 'Registration failed', 'error');
         }
       }
+    } finally {
       setLoading(false);
-    }, 600);
+    }
   };
 
-  const handleDemo = (email: string, pw: string) => {
+  const handleDemo = async (email: string, pw: string) => {
     setLoading(true);
-    setTimeout(() => {
-      const result = login(email, pw);
+    try {
+      const result = await login(email, pw);
       if (result.success) {
         addToast('Demo login successful', 'success');
         navigate('/');
       } else {
         addToast('Demo login failed', 'error');
       }
+    } finally {
       setLoading(false);
-    }, 400);
+    }
   };
 
   return (
